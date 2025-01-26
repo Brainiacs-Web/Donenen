@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <style>
+        /* Global Styling */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Jost', sans-serif;
+            background: #000000; /* Default space black background */
+            color: white; /* White text */
+        }
+
+        .main {
+            text-align: center;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh; /* Full screen height */
+        }
+
+        /* Title Styling */
+        .title {
+            font-size: 2.5em;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.6); /* White text shadow */
+        }
+
+        .btn-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Buttons Styling */
+        button {
+            width: 200px;
+            padding: 12px;
+            background: #333333; /* Dark gray for buttons */
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #ffffff; /* White text for buttons */
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.2s ease-in-out;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+        }
+
+        button:hover {
+            background: #666666; /* Lighter gray on hover */
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.6);
+        }
+
+        /* Pop-Up Styling */
+        .popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            width: 300px;
+            padding: 20px;
+            background: #444444; /* Dark gray background for the login container */
+            color: #ffffff; /* White text inside container */
+            border-radius: 10px;
+            box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.6); /* Shadow for realistic effect */
+            text-align: center;
+            z-index: 1000;
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .popup.active {
+            transform: translate(-50%, -50%) scale(1);
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 999;
+            display: none;
+        }
+
+        .overlay.active {
+            display: block;
+        }
+
+        /* Updated Input Fields */
+        input {
+            width: 90%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #444444; /* Darker gray border for input */
+            border-radius: 5px;
+            background: #333333; /* Dark gray background for input */
+            color: white; /* White text for input fields */
+        }
+
+        input::placeholder {
+            color: #A9A9A9; /* Light gray placeholder text */
+            font-size: 0.9em;
+            text-align: left;
+            padding-left: 10px;
+        }
+
+        /* Updated Continue Button */
+        .continue-btn {
+            margin-top: 10px;
+            padding: 8px 12px;
+            background: #444444; /* Dark gray matching button color */
+            color: #ffffff; /* White text */
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .continue-btn:hover {
+            background: #666666; /* Lighter gray on hover */
+        }
+    </style>
+</head>
+<body>
+    <div class="main">
+        <div class="title">Login</div>
+        <div class="btn-container">
+            <div class="login-container">
+                <input type="text" id="username" placeholder="Enter username">
+                <button class="continue-btn" onclick="checkLogin()">Continue</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Overlay for pop-up -->
+    <div class="overlay" id="overlay"></div>
+
+    <!-- Invalid Username Pop-Up -->
+    <div class="popup" id="popup">
+        <p>REGISTER FIRST</p>
+        <button onclick="closePopup()">OK</button>
+    </div>
+
+    <script>
+        function checkLogin() {
+            const username = document.getElementById("username").value;
+            if (username === "Vishal16561") {
+                // Redirect to loading page
+                window.location.href = "loading.html";
+            } else {
+                document.getElementById("overlay").classList.add("active");
+                document.getElementById("popup").classList.add("active");
+            }
+        }
+
+        function closePopup() {
+            document.getElementById("overlay").classList.remove("active");
+            document.getElementById("popup").classList.remove("active");
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JEE Mains Test Interface</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 20px;
+      background-color: #003366;
+      color: white;
+    }
+
+    main {
+      display: flex;
+      height: calc(100vh - 100px);
+    }
+
+    .navigation-pane {
+      width: 20%;
+      background: #f5f5f5;
+      padding: 15px;
+      overflow-y: auto;
+    }
+
+    .navigation-pane h2 {
+      margin: 0 0 10px 0;
+    }
+
+    #question-navigation button {
+      margin: 5px;
+      padding: 10px;
+      width: 40px;
+      height: 40px;
+      background-color: #e0e0e0;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    #question-navigation button.active {
+      background-color: #003366;
+      color: white;
+    }
+
+    .question-area {
+      flex: 1;
+      padding: 20px;
+      overflow-y: auto;
+    }
+
+    .question-area h2 {
+      font-size: 1.8em;
+    }
+
+    .options label {
+      display: block;
+      margin: 10px 0;
+    }
+
+    .actions {
+      margin-top: 20px;
+    }
+
+    .actions button {
+      margin-right: 10px;
+      padding: 10px 20px;
+      background-color: #003366;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    footer {
+      text-align: center;
+      padding: 15px;
+      background: #003366;
+      color: white;
+    }
+
+    footer button {
+      padding: 10px 20px;
+      background-color: red;
+      color: white;
+      border: none;
+      border-radius: 5px;
+    }
+
+    footer button:hover {
+      background-color: #e60000;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="header-left">
+      <h1>JEE Mains Mock Test</h1>
+    </div>
+    <div class="header-right">
+      <span>Time Remaining: <span id="timer">03:00:00</span></span>
+    </div>
+  </header>
+
+  <main>
+    <div class="navigation-pane">
+      <h2>Question Panel</h2>
+      <div id="question-navigation">
+        <!-- Dynamic Question Numbers -->
+      </div>
+    </div>
+
+    <div class="question-area">
+      <div id="question-display">
+        <!-- Questions will load dynamically -->
+      </div>
+      <div class="options">
+        <form id="options-form">
+          <!-- Options will load dynamically -->
+        </form>
+      </div>
+      <div class="actions">
+        <button id="mark-for-review">Mark for Review</button>
+        <button id="save-next">Save & Next</button>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <button id="submit-test">Submit Test</button>
+  </footer>
+
+  <script>
+    // Timer Functionality
+    let timeLeft = 10800; // 3 hours in seconds
+    const timerElement = document.getElementById("timer");
+
+    function updateTimer() {
+      const hours = Math.floor(timeLeft / 3600);
+      const minutes = Math.floor((timeLeft % 3600) / 60);
+      const seconds = timeLeft % 60;
+      timerElement.textContent = `${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
+      if (timeLeft > 0) {
+        timeLeft--;
+      } else {
+        alert("Time's up! Submitting the test.");
+        // Auto-submit logic
+      }
+    }
+
+    setInterval(updateTimer, 1000);
+
+    // Retrieve questions from localStorage
+    const questions = JSON.parse(localStorage.getItem('questions')) || [];
+    const questionNavigation = document.getElementById("question-navigation");
+    const questionDisplay = document.getElementById("question-display");
+
+    // Render Questions in Navigation Pane
+    questions.forEach((q, index) => {
+      const btn = document.createElement("button");
+      btn.textContent = index + 1;
+      btn.addEventListener("click", () => loadQuestion(index));
+      questionNavigation.appendChild(btn);
+    });
+
+    // Load Question
+    function loadQuestion(index) {
+      const q = questions[index];
+      questionDisplay.innerHTML = `
+        <h2>Question ${index + 1}</h2>
+        <p>${q.question}</p>
+      `;
+      const optionsForm = document.getElementById("options-form");
+      optionsForm.innerHTML = q.options
+        .map((opt, i) => `<label><input type="radio" name="option" value="${String.fromCharCode(65 + i)}"> ${opt}</label><br>`)
+        .join("");
+      
+      // Highlight the active question button
+      const buttons = document.querySelectorAll("#question-navigation button");
+      buttons.forEach((btn, i) => {
+        if (i === index) {
+          btn.classList.add("active");
+        } else {
+          btn.classList.remove("active");
+        }
+      });
+    }
+
+    // Initial Load
+    loadQuestion(0);
+
+    // Save & Next
+    document.getElementById("save-next").addEventListener("click", () => {
+      const currentQuestion = document.querySelector("#question-navigation button.active");
+      if (currentQuestion?.nextSibling) currentQuestion.nextSibling.click();
+    });
+
+    // Submit Test
+    document.getElementById("submit-test").addEventListener("click", () => {
+      if (confirm("Are you sure you want to submit?")) {
+        alert("Test Submitted Successfully!");
+        // Add submission logic
+      }
+    });
+  </script>
+</body>
+</html>
